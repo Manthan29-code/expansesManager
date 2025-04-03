@@ -2,10 +2,38 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
+#include<sys/stat.h>
+#include<errno.h>
+#ifdef _WIN32
+    #include <direct.h>
+    #define mkdir(dir, mode) _mkdir(dir)
+#endif
+
+// Create directory if it doesn't exist
+void createDirectoryIfNotExists(const char* dirname) {
+    struct stat st = {0};
+    if (stat(dirname, &st) == -1) {
+        #ifdef _WIN32
+            if (_mkdir(dirname) == -1 && errno != EEXIST) {
+                printf("\nError creating directory: %s", dirname);
+                return;
+            }
+        #else
+            if (mkdir(dirname, 0700) == -1 && errno != EEXIST) {
+                printf("\nError creating directory: %s", dirname);
+                return;
+            }
+        #endif
+    }
+}
 
 // Save all users data to a file
 void saveUsersToFile() {
-    FILE *userFile = fopen("users.dat", "wb");
+    createDirectoryIfNotExists("userdata");
+    
+    char userFilePath[200];
+    sprintf(userFilePath, "userdata/users.dat");
+    FILE *userFile = fopen(userFilePath, "wb");
     if (userFile == NULL) {
         printf("\nError opening file for writing!");
         return;
@@ -25,7 +53,9 @@ void saveUsersToFile() {
 
 // Load all users data from file
 void loadUsersFromFile() {
-    FILE *userFile = fopen("users.dat", "rb");
+    char userFilePath[200];
+    sprintf(userFilePath, "userdata/users.dat");
+    FILE *userFile = fopen(userFilePath, "rb");
     if (userFile == NULL) {
         printf("\nNo existing user data found.");
         return;
@@ -63,8 +93,10 @@ void loadUsersFromFile() {
 void saveUserExpenses(struct user* user) {
     if (user == NULL || user->account == NULL) return;
 
-    char filename[100];
-    sprintf(filename, "expenses_%s.dat", user->email);
+    createDirectoryIfNotExists("userdata");
+    
+    char filename[200];
+    sprintf(filename, "userdata/expenses_%s.dat", user->email);
     FILE *expFile = fopen(filename, "wb");
     if (expFile == NULL) {
         printf("\nError opening expense file for writing!");
@@ -88,8 +120,8 @@ void saveUserExpenses(struct user* user) {
 void loadUserExpenses(struct user* user) {
     if (user == NULL) return;
 
-    char filename[100];
-    sprintf(filename, "expenses_%s.dat", user->email);
+    char filename[200];
+    sprintf(filename, "userdata/expenses_%s.dat", user->email);
     FILE *expFile = fopen(filename, "rb");
     if (expFile == NULL) {
         return; // No expenses file exists for this user
@@ -119,4 +151,18 @@ void loadUserExpenses(struct user* user) {
     }
 
     fclose(expFile);
+}
+
+// Function to clean all user data
+void cleanAllUserData() {
+    struct user *temp = users;
+    while (temp != NULL) {
+        char filename[200];
+        sprintf(filename, "userdata/expenses_%s.dat", temp->email);
+        remove(filename);
+        temp = temp->next;
+    }
+    
+    remove("userdata/users.dat");
+    printf("\nAll user data has been cleaned successfully!");
 } 

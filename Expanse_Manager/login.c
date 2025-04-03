@@ -27,7 +27,6 @@ void login()
         return;
     }
     else{
-        printf("\nin else block");
         struct user *temp=users;
         while(temp!= NULL)
         {
