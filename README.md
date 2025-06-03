@@ -7,6 +7,7 @@ A C-based command-line application for managing personal expenses with multi-use
 - [User Guide](#user-guide)
 - [Admin Guide](#admin-guide)
 - [Features](#features)
+- [Data Organization](#data-organization)
 
 ## Getting Started
 
@@ -64,30 +65,42 @@ After logging in, users can:
 
 ### Admin Features
 1. **View All Users**
-   - Lists all registered users
+   - Lists all registered users in a formatted table
    - Shows user count
-   - Displays names and email addresses
+   - Displays names and email addresses with proper spacing
+   - Clean and organized presentation
 
 2. **View Specific User Details**
    - Search user by email
-   - Shows user's personal information
-   - Displays account details and expenses with dates
+   - Shows user's personal information in a structured table
+   - Displays account details and expenses with proper formatting
+   - Clear visual separation of different data sections
 
 3. **View All Expenses**
-   - Lists expenses for all users with dates
-   - Shows per-user totals
+   - Lists expenses for all users in a well-formatted table
+   - Shows per-user totals with clear separation
    - Displays grand total across all users
+   - Organized presentation with proper spacing
 
 4. **View Expenses by Date Range**
    - Enter start date (DD MM YYYY)
    - Enter end date (DD MM YYYY)
-   - Shows expenses within specified date range
+   - Shows expenses within specified date range in a formatted table
    - Displays per-user totals for date range
    - Shows summary statistics:
-     * Total expenses in range
-     * Number of expenses
+     * Total number of expenses in range
+     * Total amount of expenses
      * Average expense amount
-   - Date validation included
+   - Date validation included:
+     * Validates date format
+     * Checks for valid dates (including leap years)
+     * Ensures start date is before or equal to end date
+   - Displays expenses in a clean, formatted table with:
+     * User name
+     * Expense title
+     * Date (DD/MM/YYYY format)
+     * Amount
+   - Shows "No expenses found" message if no expenses exist in range
 
 5. **View Total Expense Statistics**
    - Total number of users
@@ -95,6 +108,13 @@ After logging in, users can:
    - Total expenses across all users
    - Average expense per user
    - User with highest expenses
+   - All statistics displayed in a clean, formatted table
+
+6. **Clean All User Data**
+   - Option to remove all user data and files
+   - Useful for system maintenance or testing
+   - Removes both user accounts and expense records
+   - Cleans up the entire userdata directory
 
 ## Features
 
@@ -109,6 +129,12 @@ After logging in, users can:
 - Expense recording
 - Balance validation
 
+### Data Organization
+- All user data stored in a dedicated `userdata` directory
+- Separate files for user accounts and expenses
+- Organized file structure for better management
+- Automatic directory creation if not exists
+
 ### Data Persistence
 - User data saved automatically
 - Expenses stored per user
@@ -120,6 +146,8 @@ After logging in, users can:
 - Comprehensive user monitoring
 - Expense tracking and statistics
 - Detailed user information access
+- Data cleanup functionality
+- Formatted table displays for better readability
 
 ### Security Features
 - Password protection
@@ -135,10 +163,11 @@ After logging in, users can:
 - Date-based expense analysis
 - Support for expenses from year 2000 onwards
 
-## Data Storage
-The program maintains data persistence through:
-- `users.dat` - Stores user account information
-- `expenses_[email].dat` - Stores expenses for each user
+## Data Organization
+The program maintains data in an organized structure:
+- `userdata/` directory for all user-related files
+- `userdata/users.dat` - Stores user account information
+- `userdata/expenses_[email].dat` - Stores expenses for each user
 
 ## Data Format
 
@@ -157,9 +186,11 @@ The program maintains data persistence through:
 - Date range queries show summary statistics
 - Expenses are automatically sorted by date
 - Use date ranges to track periodic spending
+- Admin tables provide better readability with proper spacing
 
 ## Notes
 - All data is automatically saved after important operations
 - Keep your email and password safe
 - Admin credentials should be changed in production
-- Regular backups of .dat files recommended 
+- Regular backups of userdata directory recommended
+- Use the cleanup feature carefully as it removes all user data 
