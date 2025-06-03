@@ -49,15 +49,27 @@ void addExpanse(struct user* currUser)
     }
     char title[30];
     float amount;
-    printf("\nExpanse title");
+    int day, month, year;
+    
+    printf("\nExpanse title: ");
     fflush(stdin);
     gets(title);
-    printf("\n Add expanse");
+    
+    printf("\nAdd expanse amount: ");
     fflush(stdin);
-    scanf("%f" ,&amount );
+    scanf("%f", &amount);
+    
+    printf("\nEnter expense date (DD MM YYYY): ");
+    fflush(stdin);
+    scanf("%d %d %d", &day, &month, &year);
+    
+    // Validate date
+    if (!isValidDate(day, month, year)) {
+        printf("\nInvalid date! Please enter a valid date.");
+        return;
+    }
 
     //to check expense is less then balance or not
-
     if(amount > currUser->account->balance)
     {
         printf("\n insufficient balance");
@@ -67,9 +79,13 @@ void addExpanse(struct user* currUser)
     else{
         currUser->account->balance-=amount;
     }
-    struct expense* newExpanse=(struct expense*)malloc(sizeof( struct expense));
+    
+    struct expense* newExpanse=(struct expense*)malloc(sizeof(struct expense));
     newExpanse->amount=amount;
-    strcpy(newExpanse->title ,title);
+    strcpy(newExpanse->title, title);
+    newExpanse->day = day;
+    newExpanse->month = month;
+    newExpanse->year = year;
     newExpanse->next=NULL;
 
     if(currUser->account->expenses==NULL)
@@ -88,7 +104,6 @@ void addExpanse(struct user* currUser)
     printf("\n Expense added!!!!");
     checkBalance(currUser);
     return;
-
 }
 
 // Expanse History
@@ -105,13 +120,40 @@ void listExpanse(struct user* currUser)
         printf("\n no any expense");
         return;
     }
+    
+    printf("\n");
+    printTableLine(65);
+    printf("|");
+    printCenteredText("Title", 27);
+    printf("|");
+    printCenteredText("Date", 17);
+    printf("|");
+    printCenteredText("Amount", 17);
+    printf("|\n");
+    printTableLine(65);
+    
     while(temp!=NULL)
     {
-        printf("\n{title : %s amount : %.2f }", temp->title, temp->amount);
+        printf("|");
+        printCenteredText(temp->title, 27);
+        printf("|");
+        
+        char dateStr[15];
+        sprintf(dateStr, "%02d/%02d/%d", temp->day, temp->month, temp->year);
+        printCenteredText(dateStr, 17);
+        
+        printf("|");
+        char amountStr[15];
+        sprintf(amountStr, "%.2f", temp->amount);
+        printCenteredText(amountStr, 17);
+        
+        printf("|\n");
         temp=temp->next;
     }
+    printTableLine(65);
     return;
 }
+
 
 //to check balance
 void checkBalance(struct user* currUser)
@@ -129,6 +171,11 @@ void checkBalance(struct user* currUser)
 //to add balance 
 void addBalance(struct user* currUser)
 {
+     if(currUser->account==NULL)
+    {
+        printf("\nCreate Account first");
+        return;
+    }
     float amount;
     printf("\n enter amount u want to add");
     fflush(stdin);
@@ -168,9 +215,10 @@ void appmenu(struct user *currUser)
         case 4:
             checkBalance(currUser);
             appmenu(currUser);
-        break;
-        case 5:
+            break;
+            case 5:
             addBalance(currUser);
+            appmenu(currUser);
         break;
         case 6:
             return;

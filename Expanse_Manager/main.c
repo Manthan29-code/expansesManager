@@ -32,7 +32,7 @@ int main()
             case 2:
                 login();
                 // Save data after user session
-                saveUsersToFile();
+                // saveUsersToFile();
                 break;
             case 3:
                 if(adminLogin()) {
@@ -41,6 +41,9 @@ int main()
                 break;
             case 4:
                 // Save all data before exit
+                if(users == NULL){               
+                    exit(0);
+                }
                 saveUsersToFile();
                 printf("\nThank you for using Expense Manager!");
                 exit(0);

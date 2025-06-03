@@ -2,6 +2,7 @@
 #define APPMENU_H
 
 #include "user.h"
+#include "admin.h"
 
 void addAccount(struct user* currUser);
 void addExpanse(struct user* currUser);

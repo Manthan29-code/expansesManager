@@ -4,6 +4,7 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
+#include "filehandler.h"
 // #include "user.c"
 
 void login()
@@ -19,11 +20,12 @@ void login()
     gets(email);
     if(users!=NULL)
     {
-        printf("\nuser exist (create first user) let's check you are among them or not");
+        printf("\nuser exist");
     }
     if(users==NULL)
     {
-        printf("\nuser not exist (create first user)");
+        printf("\nuser not exist");
+        printf("\nregister yourself first");
         return;
     }
     else{
@@ -38,41 +40,9 @@ void login()
             }
             temp=temp->next;
         }
+        saveUsersToFile();
         return;
     }
 }
 
 
-// int main()
-// {
-//     login();
-// }
-
-
-// int main()
-// {
-//     int choice;
-//     while(1)
-//     {
-//         printf("1>  signup");
-//         printf("1>  Login");
-//         printf("1>  Exit");
-
-//         switch(choice)
-//         {
-//             case 1:
-//                 signup();
-//             break;
-//             case 2:
-//                 Login();
-//             break;
-//             case 3:
-//                 exit(0);
-//             break;
-//             default:
-//                 printf("\nEnter valid choice");
-//             break;
-    
-//         }
-//     }    
-// }

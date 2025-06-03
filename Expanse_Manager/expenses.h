@@ -4,6 +4,9 @@
 struct expense {
     char title[100];
     float amount;
+    int day;
+    int month;
+    int year;
     struct expense *next;
 };
 

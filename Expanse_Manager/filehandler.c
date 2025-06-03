@@ -159,10 +159,28 @@ void cleanAllUserData() {
     while (temp != NULL) {
         char filename[200];
         sprintf(filename, "userdata/expenses_%s.dat", temp->email);
-        remove(filename);
-        temp = temp->next;
+        if (remove(filename) != 0) {
+            printf("\nFailed to remove %s", filename);
+        }
+        // Free all expenses
+        if (temp->account != NULL) {
+            struct expense *exp = temp->account->expenses;
+            while (exp != NULL) {
+                struct expense *nextExp = exp->next;
+                free(exp);
+                exp = nextExp;
+            }
+            free(temp->account);
+        }
+        struct user *nextUser = temp->next;
+        free(temp);
+        temp = nextUser;
     }
-    
-    remove("userdata/users.dat");
-    printf("\nAll user data has been cleaned successfully!");
-} 
+    users = NULL;
+
+    // Remove user data files
+    if (remove("userdata/users.dat") != 0) {
+        printf("\nFailed to remove userdata/users.dat");
+    }
+    printf("\nAll user data has been cleaned successfully!\n");
+}
